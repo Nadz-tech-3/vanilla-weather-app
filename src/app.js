@@ -30,7 +30,10 @@ function displayTemperature(response) {
   let windElement = document.querySelector("#wind");
   let dateElement = document.querySelector("#date");
   let iconElement = document.querySelector("#icon");
-  temperatureElement.innerHTML = Math.round(response.data.temperature.current);
+
+celsiusTemperature = response.data.temperature.current
+
+  temperatureElement.innerHTML = Math.round(celsiusTemperature);
   cityElement.innerHTML = response.data.city;
   descriptionElement.innerHTML = response.data.condition.description;
   humidityElement.innerHTML = response.data.temperature.humidity;
@@ -43,7 +46,44 @@ function displayTemperature(response) {
   iconElement.setAttribute("alt", response.data.condition.description);
 }
 
-let apiKey = "bfa005e48f0f8e59ta753oe5e3baa0b4";
-let apiUrl = `https://api.shecodes.io/weather/v1/current?query=New-York&key=bfa005e48f0f8e59ta753oe5e3baa0b4`;
+function search(city) {
+  let apiKey = "bfa005e48f0f8e59ta753oe5e3baa0b4";
+  let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=bfa005e48f0f8e59ta753oe5e3baa0b4`;
+  axios.get(apiUrl).then(displayTemperature);
+}
 
-axios.get(apiUrl).then(displayTemperature);
+function handleSubmit(event) {
+  event.preventDefault();
+
+  let cityInputElement = document.querySelector("#city-input");
+  search(cityInputElement.value);
+}
+
+function diplayFahrenheitTemperature(event) 
+{event.preventDefault();
+  let temperatureElement = document.querySelector("#temperature");
+
+  fahrenheitLink.classList.add("active");
+  celsiusLink.classList.remove("active");
+    let fahrenheitTemperature = (celsiusTemperature * 9)/5 + 32;
+  temperatureElement.innerHTML = Math.round(fahrenheitTemperature);
+}
+
+function diplaycelsiusTemperature(event) 
+{event.preventDefault();
+  celsiusLink.classList.add("active");
+  fahrenheitLink.classList.remove("active");
+  let temperatureElement = document.querySelector("#temperature");
+  temperatureElement.innerHTML = Math.round(celsiusTemperature); 
+}
+
+let celsiusTemperature = null;
+
+let form = document.querySelector("#search-form");
+form.addEventListener("submit", handleSubmit);
+
+let fahrenheitLink = document.querySelector("#fahrenheit-link");
+fahrenheitLink.addEventListener("click", diplayFahrenheitTemperature);
+
+let celsiusLink = document.querySelector("#celsius-link");
+celsiusLink.addEventListener("click", diplaycelsiusTemperature);
